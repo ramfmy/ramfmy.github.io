@@ -294,6 +294,195 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/01/ansible入门笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="付梦阳">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="七寸林夕阳">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/01/ansible入门笔记/" itemprop="url">ansible入门笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-01T20:37:22+08:00">
+                2019-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/05/01/ansible入门笔记/" class="leancloud_visitors" data-flag-title="ansible入门笔记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>c]</p>
+<h1 id="安装ansible"><a href="#安装ansible" class="headerlink" title="安装ansible"></a>安装ansible</h1><p>通过yum安装<br>如果是CentOS用户，那么需要配置EPEL<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm</span><br></pre></td></tr></table></figure></p>
+<p>安装yum</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install ansible</span><br></pre></td></tr></table></figure>
+<h1 id="配置远程客户端"><a href="#配置远程客户端" class="headerlink" title="配置远程客户端"></a>配置远程客户端</h1><p>为了方便，将各个客户端定义如下：</p>
+<p>定义：</p>
+<ul>
+<li>主机1 master</li>
+<li>主机2 node1</li>
+<li>主机3 node2</li>
+<li>目的是想让主机1可以控制主机2主机3</li>
+</ul>
+<p>假如master的ip是：20.1.0.118<br>node1的ip是：20.1.0.111<br>node2的ip是：20.1.0.115</p>
+<p>我们将node1和node2添加到master的/etc/ansible/hosts中，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node1 ansible_ssh_host=20.1.0.111 ansible_ssh_user=&quot;root&quot;</span><br><span class="line">node2 ansible_ssh_host=20.1.0.115 ansible_ssh_user=&quot;root&quot;</span><br></pre></td></tr></table></figure>
+<p>我们这里只指定ansible_ssh_user，所以我们希望的是可以无密登陆，关于无密登陆，下一节会进行介绍。</p>
+<p>当hosts配置好后，我们可以使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ansible all -m ping</span><br></pre></td></tr></table></figure>
+<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;kubenetes-k8s-master-572wkabn2gov.novalocal:root&gt;/root/ansible:</span><br><span class="line">&gt; ansible all -m ping</span><br><span class="line">node1 | SUCCESS =&gt; &#123;</span><br><span class="line">    &quot;changed&quot;: false, </span><br><span class="line">    &quot;ping&quot;: &quot;pong&quot;</span><br><span class="line">&#125;</span><br><span class="line">node2 | SUCCESS =&gt; &#123;</span><br><span class="line">    &quot;changed&quot;: false, </span><br><span class="line">    &quot;ping&quot;: &quot;pong&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>说明配置成功了。</p>
+<h1 id="ssh-copy-id实现ssh无密码登陆远程主机"><a href="#ssh-copy-id实现ssh无密码登陆远程主机" class="headerlink" title="ssh-copy-id实现ssh无密码登陆远程主机"></a>ssh-copy-id实现ssh无密码登陆远程主机</h1><ul>
+<li>ssh-keygen 产生公钥与私钥对</li>
+<li>ssh-copy-id 将本机的公钥复制到远程机器的authorized_keys文件中，</li>
+</ul>
+<p>定义：</p>
+<ul>
+<li>主机1</li>
+<li>主机2</li>
+<li>目的是想让主机1可以无密访问主机2</li>
+</ul>
+<h2 id="step1"><a href="#step1" class="headerlink" title="step1"></a>step1</h2><p>在主机1上产生公钥私钥对</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen</span><br></pre></td></tr></table></figure>
+<p>当前测试产生的密钥对是在当前文件夹中，然后pwd一下，看看路径，下一步用得到</p>
+<h2 id="step2"><a href="#step2" class="headerlink" title="step2"></a>step2</h2><p>用ssh-copy-id将公钥复制到远程机器中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-copy-id -i 公钥路径/公钥名.pub 用户名@主机2IP</span><br></pre></td></tr></table></figure>
+<p>例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-copy-id -i /root/.ssh/id_rsa.pub root@20.1.0.111</span><br></pre></td></tr></table></figure></p>
+<h2 id="step3"><a href="#step3" class="headerlink" title="step3"></a>step3</h2><p>无密访问测试<br>在主机1上</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh root@20.1.0.111</span><br></pre></td></tr></table></figure>
+<p>不需要输入密码就可以访问了</p>
+<h1 id="简单的例子"><a href="#简单的例子" class="headerlink" title="简单的例子"></a>简单的例子</h1><h2 id="命令行模式"><a href="#命令行模式" class="headerlink" title="命令行模式"></a>命令行模式</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ansible node2 -m yum -a &quot;name=vim state=latest&quot;</span><br></pre></td></tr></table></figure>
+<p>该命令会在node2上安装最新版的vim</p>
+<p><em>此处测试时失败，安装完第一步中的EPEL后解决</em></p>
+<h2 id="单文件模式"><a href="#单文件模式" class="headerlink" title="单文件模式"></a>单文件模式</h2><ol>
+<li>操作文件<br>hello.yml<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- hosts: node1</span><br><span class="line">  tasks:</span><br><span class="line">    - name: say hello</span><br><span class="line">      shell: echo &quot;hello world&quot; &gt; /root/hello</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>运行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ansible-playbook hello.yml</span><br></pre></td></tr></table></figure></p>
+<p>运行完后，登陆node1，在root目录下，有hello文件，并且内容是hello world。</p>
+<p>关于内容的格式我现在很困惑，比如说下面的格式也是可以通过的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">---</span><br><span class="line">- name: say hello</span><br><span class="line">  hosts: node1</span><br><span class="line">  tasks:</span><br><span class="line">    - name: say hello</span><br><span class="line">      shell: echo &quot;hello world&quot; &gt; /root/hello</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>安装软件<br>git.yml<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">- name: say hello</span><br><span class="line">  hosts: node2</span><br><span class="line">  tasks:</span><br><span class="line">    - name: say hello</span><br><span class="line">      yum: name=git state=latest</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="多文件模式"><a href="#多文件模式" class="headerlink" title="多文件模式"></a>多文件模式</h2><p>和上一节中的一样，我们引用task的概念后，来进行安装git等操作，引用task的好处是，如果我们需要操作多个node，并且每个node之间有相同的操作，这样我们就把操作划分为task，在相应的node下面的tasks下，调用这个task就好了。下面上例子。</p>
+<p>上例子之前还是先说一下具体实现的功能吧，免得我记性这么差，以后自己都看不懂了。</p>
+<p>在master上对node1和node2进行操作，node1执行的操作是，安装git，安装完成后，新建文件在/root/status，并且在里面写上内容”git is installed”，node2执行的操作是，安装vim，安装完成后，新建文件在/root/status,并且在里面协商内容”vim is installed”.</p>
+<p>文件结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;kubenetes-k8s-master-572wkabn2gov.novalocal:root&gt;/root:</span><br><span class="line">&gt; tree ansible</span><br><span class="line">ansible</span><br><span class="line">├── main.yml</span><br><span class="line">└── roles</span><br><span class="line">    ├── git</span><br><span class="line">    │   └── tasks</span><br><span class="line">    │       └── main.yaml</span><br><span class="line">    └── vim</span><br><span class="line">        └── tasks</span><br><span class="line">            └── main.yaml</span><br><span class="line"></span><br><span class="line">5 directories, 3 files</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/01/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -468,7 +657,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -476,6 +665,15 @@
 
             
 
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
             
 
           </nav>
