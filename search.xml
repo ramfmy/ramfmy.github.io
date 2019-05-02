@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[vim切换编辑文件]]></title>
+    <url>%2F2019%2F05%2F02%2Fvim%E5%88%87%E6%8D%A2%E7%BC%96%E8%BE%91%E6%96%87%E4%BB%B6%2F</url>
+    <content type="text"><![CDATA[jbg将一个在后台暂停的命令，变成继续执行fg将后台中的命令调至前台继续运行jobs查看当前有多少在后台运行的命令ctrl + z可以将一个正在前台执行的命令放到后台，并且暂停 例子：编辑第一个文件 vi 111然后ctrl+z变成后台编辑第二个文件 vi 222然后ctrl+z变成后台输入jobs，查看当前后台的命令输入fg+命令号调取到前台 同一窗口编辑多个文件打开一个文件后，命令模式下输入：tabedit 文件名就可以多窗口查看文件切换时输入gt]]></content>
+  </entry>
+  <entry>
+    <title><![CDATA[robot framework 安装]]></title>
+    <url>%2F2019%2F05%2F02%2Frobotframework%E5%AE%89%E8%A3%85%2F</url>
+    <content type="text"><![CDATA[运行环境：linux 我们使用pip来安装robotframework，我这里使用的WSL的ubuntu，系统内置了Python，因此我只需要安装pip就好了。 安装pip12wget https://bootstrap.pypa.io/get-pip.py --no-check-certificatepython get-pip.py 如果系统没有wget的话，执行下面的语句安装： ubuntu:1apt-get install wget centos:1yum install wget 安装robotframework1pip install robotframework]]></content>
+      <categories>
+        <category>robotframework</category>
+      </categories>
+      <tags>
+        <tag>robotframework, linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[OpenStack中watchdog的使用]]></title>
     <url>%2F2019%2F05%2F02%2FOpenStack%E4%B8%ADwatchdog%E7%9A%84%E4%BD%BF%E7%94%A8%2F</url>
     <content type="text"><![CDATA[安装watchdog硬件首先需要将创建虚机的Glance images 或者 Nova flavors的watchdog打开： Nova flavors设置方法openstack flavor set FLAVOR-NAME –property hw:watchdog_action=ACTION可以设置的ACTION： disabled：不使用watchdog设备 reset：强行重置虚拟机 poweroff：强行关闭虚拟机 pause：暂停虚拟机 none：只是启用watchdog，在虚拟机hang住时不执行任何操作 Glance images设置方法openstack image set IMAGE-NAME –property hw:watchdog_action=ACTION可以设置的ACTION： disabled：不使用watchdog设备 reset：强行重置虚拟机 poweroff：强行关闭虚拟机 pause：暂停虚拟机 none：只是启用watchdog，在虚拟机hang住时不执行任何操作 此步骤设置完成后，在/dev目录下会有watchdog 安装watchdog软件使用上面的flavor或者image创建虚机在虚机中做如下配置 安装watchdog包yum install -y watchdog 修改配置文件（添加或取消下面这行（还不知道什么时候应该添加什么时候应该取消））/etc/watchdog.confwatchdog-device = /dev/watchdog 启动watchdog服务systemctl enable watchdogsystemctl start watchdog 测试watchdog是否已经启动systemctl status watchdogdmesg | grep 6300 测试搞down掉虚机echo c &gt; /proc/sysrq-trigger等待虚机是否可以重启（reboot）（前提是前面的hw:watchdog_action=reset)]]></content>
