@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title><![CDATA[jdk in linux]]></title>
-    <url>%2F2019%2F05%2F02%2Ftest%2F</url>
-    <content type="text"><![CDATA[https://baijiahao.baidu.com/s?id=1625874094501173729&amp;wfr=spider&amp;for=pc]]></content>
-  </entry>
-  <entry>
     <title><![CDATA[OpenStack中watchdog的使用]]></title>
     <url>%2F2019%2F05%2F02%2FOpenStack%E4%B8%ADwatchdog%E7%9A%84%E4%BD%BF%E7%94%A8%2F</url>
     <content type="text"><![CDATA[安装watchdog硬件首先需要将创建虚机的Glance images 或者 Nova flavors的watchdog打开： Nova flavors设置方法openstack flavor set FLAVOR-NAME –property hw:watchdog_action=ACTION可以设置的ACTION： disabled：不使用watchdog设备 reset：强行重置虚拟机 poweroff：强行关闭虚拟机 pause：暂停虚拟机 none：只是启用watchdog，在虚拟机hang住时不执行任何操作 Glance images设置方法openstack image set IMAGE-NAME –property hw:watchdog_action=ACTION可以设置的ACTION： disabled：不使用watchdog设备 reset：强行重置虚拟机 poweroff：强行关闭虚拟机 pause：暂停虚拟机 none：只是启用watchdog，在虚拟机hang住时不执行任何操作 此步骤设置完成后，在/dev目录下会有watchdog 安装watchdog软件使用上面的flavor或者image创建虚机在虚机中做如下配置 安装watchdog包yum install -y watchdog 修改配置文件（添加或取消下面这行（还不知道什么时候应该添加什么时候应该取消））/etc/watchdog.confwatchdog-device = /dev/watchdog 启动watchdog服务systemctl enable watchdogsystemctl start watchdog 测试watchdog是否已经启动systemctl status watchdogdmesg | grep 6300 测试搞down掉虚机echo c &gt; /proc/sysrq-trigger等待虚机是否可以重启（reboot）（前提是前面的hw:watchdog_action=reset)]]></content>
